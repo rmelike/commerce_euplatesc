@@ -15,11 +15,12 @@ class EuPlatescCheckoutForm extends BasePaymentOffsiteForm {
 
     /** @var \Drupal\commerce_payment\Entity\PaymentInterface $payment */
     $payment = $this->entity;
+
     /** @var \Drupal\commerce_euplatesc\Plugin\Commerce\PaymentGateway $payment_gateway_plugin */
     $payment_gateway_plugin = $payment->getPaymentGateway()->getPlugin();
     $redirect_url = $payment_gateway_plugin->getUrl();
     // Get plugin configuration.
-    $plugin_config = $payment_gateway_plugin->getConfiguration();   
+    $plugin_config = $payment_gateway_plugin->getConfiguration();
 
     $euplatesc_data = $payment_gateway_plugin->setEuPlatescCheckoutData($payment);
     foreach ($euplatesc_data as $name => $value) {

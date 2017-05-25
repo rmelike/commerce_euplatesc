@@ -8,6 +8,7 @@ use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\OffsitePaymentGateway
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\commerce_payment\Entity\PaymentInterface;
+use Drupal\commerce_price\Calculator;
 
 /**
  * Provides the EuPlatesc Checkout payment gateway plugin.
@@ -155,7 +156,7 @@ class EuPlatescCheckout extends OffsitePaymentGatewayBase implements EuPlatescCh
     // Build a name-value pair array for this transaction.
     // The data which should be signed to be transported to EuPlatesc.ro.
     $data = [
-      'amount' => $this->rounder->round($amount->getNumber(), 2),
+      'amount' => Calculator::round($amount->getNumber(), 2),
       'curr' => $amount->getCurrencyCode(),
       'invoice_id' => $order->id(),
       'order_desc' => $order_desc,
@@ -173,7 +174,7 @@ class EuPlatescCheckout extends OffsitePaymentGatewayBase implements EuPlatescCh
       'country' => $address->getCountryCode(),
       'city' => $address->getLocality(),
       'email' => $order->getEmail(),
-      'amount' => $amount->getNumber(),
+      'amount' => Calculator::round($amount->getNumber(), 2),
       'curr' => $amount->getCurrencyCode(),
       'invoice_id' => $order->id(),
       'order_desc' => $order_desc,
@@ -254,7 +255,7 @@ class EuPlatescCheckout extends OffsitePaymentGatewayBase implements EuPlatescCh
     }
 
     // We convert the secret code into a binary string.
-    $key = pack('H*', str_replace(' ', '', sprintf('%u', CRC32($key))));
+    $key = pack('H*', $key);
 
     return self::hashSHA1($str, $key);
   }
